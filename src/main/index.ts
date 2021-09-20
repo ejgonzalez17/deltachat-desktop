@@ -73,6 +73,7 @@ app.isQuitting = false
 Promise.all([
   new Promise((resolve, _reject) => app.on('ready', resolve)),
   State.load(),
+  findOutIfWeAreRunningAsAppx(),
 ])
   .then(onReady)
   .catch(error => {
@@ -81,7 +82,7 @@ Promise.all([
     process.exit(1)
   })
 
-async function onReady([_appReady, loadedState]: [any, AppState]) {
+async function onReady([_appReady, loadedState, _]: [any, AppState, any]) {
   const state = (app.state = loadedState)
 
   app.saveState = () => State.save({ saved: state.saved })
@@ -189,5 +190,6 @@ app.on('web-contents-created', (_e, contents) => {
 })
 
 import contextMenu from './electron-context-menu'
+import { findOutIfWeAreRunningAsAppx } from './isAppx'
 
 contextMenu()
